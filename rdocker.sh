@@ -149,7 +149,7 @@ if [[ $line == $success_msg ]]; then
         echo "Route: localhost:${local_port} -> ${remote_host}:${remote_port}"
         echo -e "Press ${RED}Ctrl+D${NC} to stop forwarding and exit the bash session."
         export PROMPT_COMMAND="echo -en \"${COLOR}docker:${remote_host}${NC} \""
-        bash
+        bash --norc -i
     fi
 
     kill -15 $CONNECTION_PID
