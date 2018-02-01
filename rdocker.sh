@@ -30,10 +30,10 @@ fi
 
 find_port_code="import socket;s=socket.socket(socket.AF_INET, socket.SOCK_STREAM);s.bind(('', 0));print(s.getsockname()[1]);s.close()"
 
-remote_port=$(ssh ${remote_host} -o ControlPath=${control_path} python -c \"$find_port_code\")
+remote_port=$(ssh ${remote_host} -o ControlPath=${control_path} python3 -c \"$find_port_code\")
 
 if [ -z $remote_port ]; then
-    echo "ERROR: Failed to find a free port. This usually happens when python is not installed on the remote host."
+    echo "ERROR: Failed to find a free port. This usually happens when python (python3) is not installed on the remote host."
     #clear the ssh control connection
     ssh -O exit -o ControlPath="$control_path" $remote_host 2> /dev/null
     rm -f "$control_path"
@@ -119,10 +119,10 @@ if __name__ == \"__main__\":
 PIPE=$(mktemp -u rdocXXX); mkfifo $PIPE
 exec 3<>$PIPE; rm $PIPE
 # find a free port or use the provided one
-local_port=${local_port:-$(python -c "$find_port_code")}
+local_port=${local_port:-$(python3 -c "$find_port_code")}
 
 remote_script_path="/tmp/rdocker-$remote_port-forwarder.py"
-printf "$forwarder" | ssh $remote_host -o ControlPath=$control_path -L $local_port:localhost:$remote_port "cat > ${remote_script_path}; exec python -u ${remote_script_path}" 1>&3 &
+printf "$forwarder" | ssh $remote_host -o ControlPath=$control_path -L $local_port:localhost:$remote_port "cat > ${remote_script_path}; exec python3 -u ${remote_script_path}" 1>&3 &
 CONNECTION_PID=$!
 # wait for it's output
 read -u 3 -d . line
