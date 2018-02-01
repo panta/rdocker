@@ -129,6 +129,7 @@ read -u 3 -d . line
 exec 3>&-
 
 if [[ $line == $success_msg ]]; then
+    eval "$(docker-machine env -u)"
     export DOCKER_HOST="tcp://localhost:${local_port}"
 
     if [[ -n "$command" ]]; then
